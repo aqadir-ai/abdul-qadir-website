@@ -1,26 +1,321 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #e9eef3;
+  --bg-deep: #d7e0ea;
+  --ink: #132029;
+  --ink-soft: #3d4f5c;
+  --muted: #5f7280;
+  --line: rgba(19, 32, 41, 0.12);
+  --accent: #0c6b5c;
+  --accent-bright: #12806e;
+  --surface: rgba(255, 255, 255, 0.55);
+  --glow: rgba(12, 107, 92, 0.18);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-bg: var(--bg);
+  --color-bg-deep: var(--bg-deep);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-bright: var(--accent-bright);
+  --color-surface: var(--surface);
+  --font-sans: var(--font-figtree);
+  --font-display: var(--font-instrument);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  background: var(--bg);
+  font-family: var(--font-figtree), "Segoe UI", sans-serif;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: rgba(12, 107, 92, 0.22);
+  color: var(--ink);
+}
+
+.site-shell {
+  position: relative;
+  isolation: isolate;
+}
+
+.site-shell::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background:
+    radial-gradient(ellipse 80% 55% at 12% -10%, rgba(18, 128, 110, 0.22), transparent 55%),
+    radial-gradient(ellipse 70% 50% at 92% 8%, rgba(45, 78, 110, 0.18), transparent 50%),
+    radial-gradient(ellipse 60% 45% at 50% 100%, rgba(12, 107, 92, 0.12), transparent 55%),
+    linear-gradient(165deg, #f4f7fa 0%, #e4ebf2 48%, #d9e4ee 100%);
+}
+
+.site-shell::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.45;
+  background-image:
+    linear-gradient(rgba(19, 32, 41, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(19, 32, 41, 0.035) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: radial-gradient(ellipse 75% 65% at 50% 30%, black, transparent 85%);
+  animation: grid-drift 28s linear infinite;
+}
+
+@keyframes grid-drift {
+  from {
+    background-position: 0 0, 0 0;
+  }
+  to {
+    background-position: 72px 36px, 36px 72px;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes draw-line {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes soft-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.animate-rise {
+  animation: rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-rise-delay-1 {
+  animation-delay: 0.12s;
+}
+
+.animate-rise-delay-2 {
+  animation-delay: 0.24s;
+}
+
+.animate-rise-delay-3 {
+  animation-delay: 0.36s;
+}
+
+.animate-rise-delay-4 {
+  animation-delay: 0.48s;
+}
+
+.brand-underline {
+  display: block;
+  width: min(12rem, 40%);
+  height: 2px;
+  margin-top: 1.25rem;
+  background: linear-gradient(90deg, var(--accent), transparent);
+  transform-origin: left;
+  animation: draw-line 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.55s both;
+}
+
+.hero-orbit {
+  position: absolute;
+  inset: auto auto 8% -8%;
+  width: min(52vw, 34rem);
+  height: min(52vw, 34rem);
+  border-radius: 50%;
+  border: 1px solid rgba(12, 107, 92, 0.18);
+  pointer-events: none;
+  animation: soft-pulse 7s ease-in-out infinite;
+}
+
+.hero-orbit::before,
+.hero-orbit::after {
+  content: "";
+  position: absolute;
+  inset: 12%;
+  border-radius: 50%;
+  border: 1px solid rgba(19, 32, 41, 0.08);
+}
+
+.hero-orbit::after {
+  inset: 26%;
+  border-color: rgba(12, 107, 92, 0.22);
+}
+
+.section-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.nav-link {
+  position: relative;
+  color: var(--ink-soft);
+  transition: color 0.25s ease;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -0.2rem;
+  width: 100%;
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.nav-link:hover {
+  color: var(--ink);
+}
+
+.nav-link:hover::after {
+  transform: scaleX(1);
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.4rem;
+  background: var(--ink);
+  color: #f4f7fa;
+  text-decoration: none;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition: background 0.25s ease, transform 0.25s ease;
+}
+
+.btn-primary:hover {
+  background: var(--accent);
+  transform: translateY(-1px);
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.4rem;
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 600;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(8px);
+  transition: border-color 0.25s ease, background 0.25s ease, transform 0.25s ease;
+}
+
+.btn-ghost:hover {
+  border-color: var(--accent);
+  background: rgba(255, 255, 255, 0.65);
+  transform: translateY(-1px);
+}
+
+.expertise-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--line);
+  transition: background 0.3s ease, padding-left 0.3s ease;
+}
+
+@media (min-width: 768px) {
+  .expertise-row {
+    grid-template-columns: 11rem 1fr;
+    gap: 2rem;
+    align-items: baseline;
+  }
+}
+
+.expertise-row:hover {
+  padding-left: 0.5rem;
+  background: linear-gradient(90deg, rgba(12, 107, 92, 0.06), transparent 55%);
+}
+
+.timeline-item {
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.timeline-item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55rem;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 4px rgba(12, 107, 92, 0.15);
+}
+
+.timeline-item:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: 0.22rem;
+  top: 1.35rem;
+  bottom: -1.5rem;
+  width: 1px;
+  background: var(--line);
+}
+
+.contact-link {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.contact-link:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-shell::after,
+  .animate-rise,
+  .brand-underline,
+  .hero-orbit {
+    animation: none !important;
+  }
 }
